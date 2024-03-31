@@ -38,7 +38,7 @@ pub async fn add_server(
         users: payload.users.unwrap_or(0),
         remarks: payload.remarks.unwrap_or("".to_string()),
         description: payload.description.unwrap_or("".to_string()),
-        center_frequency: payload.center_frequency,
+        base_frequency: payload.base_frequency,
         url: url,
         last_update: SystemTime::now(),
     };
@@ -79,7 +79,7 @@ pub struct ServerPing {
     users: Option<i32>,
     remarks: Option<String>,
     description: Option<String>,
-    center_frequency: f64,
+    base_frequency: f64,
     port: Option<i32>,
     url: Option<String>,
 }

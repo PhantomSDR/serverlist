@@ -16,7 +16,7 @@ pub struct Server {
     pub users: i32,
     pub remarks: String,
     pub description: String,
-    pub center_frequency: f64,
+    pub base_frequency: f64,
     pub url: String,
     pub last_update: SystemTime,
 }
