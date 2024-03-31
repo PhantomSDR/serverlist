@@ -8,5 +8,5 @@ axum = { version = "0.7.5", features = ["http2", "macros"] }
 axum-client-ip = "0.5.1"
 serde = { version = "1.0.197", features = ["derive"] }
 tokio = { version = "1.37.0", features = ["full"] }
-tower-http = { version = "0.5.2", features = ["add-extension"] }
+tower-http = { version = "0.5.2", features = ["add-extension", "cors"] }
 tracing-subscriber = "0.3.18"
