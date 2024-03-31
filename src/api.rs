@@ -24,9 +24,13 @@ pub async fn add_server(
     }
     let url = payload.url.unwrap_or_else(|| {
         let port = payload.port.unwrap();
+        let scheme = match payload.https {
+            Some(true) => "https",
+            _ => "http",
+        };
         match ip.0 {
-            std::net::IpAddr::V4(ip) => format!("http://{}:{}", ip.to_string(), port),
-            std::net::IpAddr::V6(ip) => format!("http://[{}]:{}", ip.to_string(), port),
+            std::net::IpAddr::V4(ip) => format!("{}://{}:{}", scheme, ip.to_string(), port),
+            std::net::IpAddr::V6(ip) => format!("{}://[{}]:{}", scheme, ip.to_string(), port),
         }
     });
 
@@ -43,7 +47,7 @@ pub async fn add_server(
         last_update: SystemTime::now(),
     };
 
-    state.write().await.add_server(payload.id, user.clone());
+    state.write().await.add_server(payload.password, user.clone());
 
     (
         StatusCode::CREATED,
@@ -71,8 +75,8 @@ pub struct PingReply {
 
 #[derive(Deserialize)]
 pub struct ServerPing {
-    id: String,
     name: String,
+    password: String,
     hardware: Option<String>,
     antenna: Option<String>,
     bandwidth: f64,
@@ -81,5 +85,6 @@ pub struct ServerPing {
     description: Option<String>,
     base_frequency: f64,
     port: Option<i32>,
+    https: Option<bool>,
     url: Option<String>,
 }
