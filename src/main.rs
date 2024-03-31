@@ -7,7 +7,7 @@ use axum::{
     http::{HeaderValue, Method}, routing::{get, post}, Router
 };
 use axum_client_ip::SecureClientIpSource;
-use tower_http::{add_extension::AddExtensionLayer, cors::CorsLayer};
+use tower_http::{add_extension::AddExtensionLayer, cors::{Any, CorsLayer}};
 
 use api::{add_server, get_all_servers};
 use servers::SharedServerList;
@@ -18,8 +18,13 @@ async fn main() {
 
     // Only allow phantomsdr.github.io to access the API
     let cors = CorsLayer::new()
-        .allow_methods([Method::GET, Method::POST])
-        .allow_origin("https://phantomsdr.github.io".parse::<HeaderValue>().unwrap());
+        .allow_methods([Method::GET, Method::POST]);
+    
+    // if DEBUG env is true, allow all origins
+    let cors = match std::env::var("DEBUG") {
+        Ok(_) => cors.allow_origin(Any),
+        _ => cors.allow_origin("https://phantomsdr.github.io".parse::<HeaderValue>().unwrap())
+    };
     
     let app = Router::new()
         .route("/api/v1/ping", post(add_server))
